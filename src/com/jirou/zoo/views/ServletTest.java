@@ -1,4 +1,4 @@
-package servletTest;
+package com.jirou.zoo.views;
 
 import java.io.IOException;
 
