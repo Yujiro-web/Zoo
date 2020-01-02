@@ -25,7 +25,8 @@ public class CommentsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
     	System.out.println("Comments!");
-    	this.findComments();
+    	List<Comment> comments = this.findComments();
+    	request.setAttribute("comments", comments);
         RequestDispatcher dispatch = request.getRequestDispatcher("comments.jsp");
         dispatch.forward(request, response);
     }
@@ -40,10 +41,14 @@ public class CommentsServlet extends HttpServlet {
         	String sql = "SELECT id, name, comment, date FROM comments ORDER BY date ASC";
         	PreparedStatement ps = con.prepareStatement(sql);
         	ResultSet rs = ps.executeQuery();
+
+        	List<Comment> items = new ArrayList<>();
         	while(rs.next()) {
-        		System.out.println(rs.getString("name"));
+        		Comment comment = new Comment(rs.getString("name"), rs.getString("comment"), rs.getString("date"));
+        		items.add(comment);
         	}
-        	return new ArrayList<>();
+
+        	return items;
     	} catch (ClassNotFoundException e) {
     		e.printStackTrace();
     		throw new RuntimeException();
